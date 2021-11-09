@@ -39,7 +39,7 @@ def _parse_candidate(diagnostic):
     fp = diagnostic['filename']
 
     candidate['word'] = '{} {}:{} [{}]  {}'.format(
-        os.path.basename(fp),
+        os.path.relpath(fp),
         str(diagnostic['lnum']),
         str(diagnostic['col']),
         DIAGNOSTIC_KINDS[diagnostic['type']],
