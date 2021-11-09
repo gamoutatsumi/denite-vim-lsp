@@ -90,3 +90,20 @@ function! denite_vim_lsp#workspace_symbol() abort
             \ })
     endfor
 endfunction
+
+function! denite_vim_lsp#workspace_diagnostics() abort
+    let l:filtered_diagnostics = {}
+
+    let l:filtered_diagnostics = lsp#internal#diagnostics#state#_get_all_diagnostics_grouped_by_uri_and_server()
+
+    let l:result = []
+    for [l:uri, l:value] in items(l:filtered_diagnostics)
+        if lsp#internal#diagnostics#state#_is_enabled_for_buffer(bufnr(lsp#utils#uri_to_path(l:uri)))
+            for l:diagnostics in values(l:value)
+              let l:result += lsp#ui#vim#utils#diagnostics_to_loc_list({ 'response': l:diagnostics })
+            endfor
+        endif
+    endfor
+    return l:result
+endfunction
+

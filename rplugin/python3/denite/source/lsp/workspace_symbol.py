@@ -1,17 +1,7 @@
-import logging
 import os
 from urllib.parse import urlparse
 
-from .base import Base
-
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
-
-handler = logging.FileHandler('denitevimlsp.log')
-fmt = logging.Formatter('%(asctime)s [%(levelname)s]: %(message)s')
-handler.setFormatter(fmt)
-handler.setLevel(logging.INFO)
-logger.addHandler(handler)
+from denite.base.source import Base
 
 LSP_SYMBOL_KINDS = [
     'File',
@@ -46,7 +36,7 @@ LSP_SYMBOL_KINDS = [
 class Source(Base):
     def __init__(self, vim):
         super().__init__(vim)
-        self.name = 'lsp_workspace_symbol'
+        self.name = 'lsp/workspace_symbol'
         self.kind = 'file'
 
         self.vim.vars['denite#source#vim_lsp#_results'] = []
@@ -68,10 +58,8 @@ class Source(Base):
 
 def make_candidates(symbols):
     if not symbols:
-        logger.info('symbol nothing')
         return []
     if not isinstance(symbols, list):
-        logger.info('symbol is not list')
         return []
     candidates = [_parse_candidate(symbol) for symbol in symbols]
     return candidates
